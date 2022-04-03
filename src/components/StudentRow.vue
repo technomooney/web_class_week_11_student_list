@@ -5,7 +5,7 @@
     <td>
       <input type="checkbox" v-bind:checked="student.present" @change="arrivedOrLeft(student,$event.target.checked)">
     </td>
-    <td><img src="@/assets/delete-icon.png" height="20" @click="deleteStudent"></td>
+    <td v-show="editTableRow"><img src="@/assets/delete-icon.png" @click="deleteStudent"></td>
   </tr>
 </template>
 
@@ -13,14 +13,17 @@
 export default {
   name: "StudentRow",
   props: {
-    student:Object
+    student:Object,
+    editTableRow:Boolean
   },
   methods: {
     arrivedOrLeft(student,present) {
       this.$emit("student-arrived-or-left-row",student, present)
     },
     deleteStudent() {
-      this.$emit("delete-student-row", this.student)
+      if (confirm(`Are you sure you want to delete ${this.student.name}?`)) {
+        this.$emit("delete-student-row", this.student)
+      }
     }
   }
 }
@@ -28,6 +31,9 @@ export default {
 
 <style scoped>
 
+img {
+  height: 20px;
+}
 .absent {
   color: lightgray;
   font-style: italic;
