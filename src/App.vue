@@ -3,6 +3,7 @@
   <student-table
       v-bind:students="students"
       v-on:student-arrived-or-left="studentArrivedOrLeft"
+      v-on:delete-student-table="deleteStudent"
   ></student-table>
   <student-message v-bind:student="mostRecentStudent"></student-message>
 
@@ -47,6 +48,14 @@ export default {
         updateStudent.present = present
         this.mostRecentStudent = updateStudent
       }
+    },
+    deleteStudent(student) {
+      //filter returns a new array of all studnets for whom the funtion returns true
+      this.students = this.students.filter(function (s) {
+        if (s !== student) {
+          return true
+        }
+      })
     }
   }
 }

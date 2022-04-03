@@ -9,13 +9,13 @@
           <th>StarID</th>
           <th>Present?</th>
         </tr>
-        <tr v-for="student in students" v-bind:class="{present: student.present, absent: !student.present}">
-          <td>{{student.name}}</td>
-          <td>{{student.starID}}</td>
-          <td>
-            <input type="checkbox" v-bind:checked="student.present" @change="arrivedOrLeft(student,$event.target.checked)">
-          </td>
-        </tr>
+        <student-row
+          v-for="student in students"
+          v-bind:student="student"
+          v-on:student-arrived-or-left-row="arrivedOrLeft"
+          v-on:delete-student-row="deleteStudent"
+        >
+        </student-row>
 
         <!-- TODO create table rows
         Each row will have a checkbox, bound to the app's data
@@ -28,9 +28,11 @@
 </template>
 
 <script>
+import StudentRow from "@/components/StudentRow";
 export default {
   name: "StudentTable",
-  emits:["student-arrived-or-left"],
+  components: {StudentRow},
+  emits:["student-arrived-or-left","delete-student-table"],
   props: {
     students:Array
   },
@@ -38,25 +40,15 @@ export default {
     arrivedOrLeft(student,present) {
       // emit message to parrent
       this.$emit("student-arrived-or-left",student, present)
+    },
+    deleteStudent(student) {
+      this.$emit("delete-student-table",student)
     }
   }
 }
 </script>
 
 <style scoped>
-
-.absent {
-  color: lightgray;
-  font-style: italic;
-  background-color: darkblue;
-}
-
-.present {
-  color: black;
-  font-weight: bold;
-  background-color: mediumaquamarine;
-}
-
 #student-table {
   max-height: 400px;
   overflow: scroll;
